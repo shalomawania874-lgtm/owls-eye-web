@@ -24,7 +24,7 @@
 <div class="card"><div class="label">Timeframe</div><input id="tf" placeholder="e.g. 15m" value="15m"></div>
 </div>
 <div class="drop" id="drop">Choose a trading-chart image<br><label><button type="button" class="secondary" onclick="document.getElementById('file').click()">UPLOAD CHART</button></label><input id="file" type="file" accept="image/*" capture="environment"></div>
-<div class="actions"><button id="run" disabled>RUN FULL ANALYSIS</button><button class="secondary" onclick="location.href='/health'">CHECK ENGINE</button></div>
+<div class="actions"><button id="run" disabled>RUN FULL ANALYSIS</button><button class="secondary" onclick="location.href='https://owls-eye-api.vercel.app/health'">CHECK ENGINE</button></div>
 </section>
 <section class="card result" id="result">
 <div class="label">Decision</div><div id="signal" class="signal">—</div>
@@ -42,7 +42,7 @@ run.onclick=async()=>{
  try{
   const fd=new FormData(); fd.append('image',file); const s=document.getElementById('symbol').value.trim(); const t=document.getElementById('tf').value.trim();
   if(s)fd.append('symbol',s); if(t)fd.append('timeframe',t);
-  const r=await fetch('/v1/analyze-chart',{method:'POST',body:fd}); const d=await r.json(); if(!r.ok)throw new Error(d.detail||'Analysis failed');
+  const r=await fetch('https://owls-eye-api.vercel.app/v1/analyze-chart',{method:'POST',body:fd}); const d=await r.json(); if(!r.ok)throw new Error(d.detail||'Analysis failed');
   const sig=d.signal||'NO TRADE', el=document.getElementById('signal'); el.textContent=sig; el.className='signal '+(sig.includes('BUY')?'buy':sig.includes('SELL')?'sell':'wait');
   document.getElementById('confidence').textContent=(d.confidence!=null?(Number(d.confidence)*100).toFixed(1)+'%':'—');
   document.getElementById('outSymbol').textContent=d.symbol||s||'—'; document.getElementById('outTf').textContent=d.timeframe||t||'—';
